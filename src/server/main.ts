@@ -18,6 +18,7 @@ app.get("/health", (_, res) => {
 
 app.get("/api/data", (req, res) => {
   const data = get_form_data();
+  console.log(JSON.stringify(data));
   res.send(data);
 });
 
