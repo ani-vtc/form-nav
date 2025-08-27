@@ -3,13 +3,22 @@ import { DatabaseEntry, FilterOptions } from '../types/database';
 
 export function useFiltering(data: DatabaseEntry[], filters: FilterOptions) {
   return useMemo(() => {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+    
     return data.filter(entry => {
+      // Ensure entry exists and has required properties
+      if (!entry || typeof entry !== 'object') {
+        return false;
+      }
+
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
         const searchableFields = [
-          entry.first_name,
-          entry.last_name,
-          entry.email,
+          entry.first_name || '',
+          entry.last_name || '',
+          entry.email || '',
           entry.company || '',
           entry.phone || ''
         ];
@@ -26,16 +35,24 @@ export function useFiltering(data: DatabaseEntry[], filters: FilterOptions) {
       }
 
       if (filters.dateFrom && entry.date_time) {
-        const entryDate = new Date(entry.date_time);
-        const fromDate = new Date(filters.dateFrom);
-        if (entryDate < fromDate) return false;
+        try {
+          const entryDate = new Date(entry.date_time);
+          const fromDate = new Date(filters.dateFrom);
+          if (entryDate < fromDate) return false;
+        } catch {
+          // Invalid date, skip this filter
+        }
       }
 
       if (filters.dateTo && entry.date_time) {
-        const entryDate = new Date(entry.date_time);
-        const toDate = new Date(filters.dateTo);
-        toDate.setHours(23, 59, 59, 999);
-        if (entryDate > toDate) return false;
+        try {
+          const entryDate = new Date(entry.date_time);
+          const toDate = new Date(filters.dateTo);
+          toDate.setHours(23, 59, 59, 999);
+          if (entryDate > toDate) return false;
+        } catch {
+          // Invalid date, skip this filter
+        }
       }
 
       return true;
