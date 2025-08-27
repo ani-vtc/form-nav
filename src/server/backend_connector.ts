@@ -12,7 +12,7 @@ export async function get_form_data() {
             "Authorization": `Bearer ${idToken}`
         }
     });
-    return response.json();
+    return await response.json();
 }
 
 

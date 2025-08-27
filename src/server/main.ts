@@ -16,10 +16,10 @@ app.get("/health", (_, res) => {
   res.send("ok");
 });
 
-app.get("/api/data", (req, res) => {
-  const data = get_form_data();
+app.get("/api/data", async (req, res) => {
+  const data = await get_form_data();
   console.log(JSON.stringify(data));
-  res.send(data);
+  res.send(JSON.stringify(data));
 });
 
 
