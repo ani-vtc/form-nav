@@ -10,7 +10,7 @@ export class ApiService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      
+      console.log(JSON.stringify(data));
       // Ensure we always return an array
       if (!Array.isArray(data)) {
         console.warn('API returned non-array data:', data);
